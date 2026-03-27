@@ -14,43 +14,71 @@ public class SettingsMenu : MonoBehaviour
     [Header("Audio Settings")]
     public Slider volumeSlider;
 
+    [Header("Platform-Specific UI")]
+    public GameObject quitButton; // Only appears on non-WebGL
+
     private AudioManager audioManager;
 
     void Start()
     {
-        // Find AudioManager in scene (might be in DontDestroyOnLoad)
         FindAudioManager();
-
-        // Load current settings
         LoadSettingsToUI();
+        AddListeners();
+        SetupPlatformSpecificUI();
+    }
 
-        // Add listeners with safety checks
+    void SetupPlatformSpecificUI()
+    {
+#if UNITY_WEBGL
+            // Hide quit button on WebGL
+            if (quitButton != null)
+                quitButton.SetActive(false);
+                
+            // Add instruction text
+            GameObject instructions = GameObject.Find("InstructionText");
+            if (instructions != null)
+            {
+                TMP_Text text = instructions.GetComponent<TMP_Text>();
+                if (text != null) text.text = "Web Version - Click to play";
+            }
+#elif UNITY_ANDROID || UNITY_IOS
+        // Make UI elements larger for touch
         if (gameModeDropdown != null)
-            gameModeDropdown.onValueChanged.AddListener(OnGameModeChanged);
-
-        if (easyToggle != null)
-            easyToggle.onValueChanged.AddListener(OnEasyToggle);
-
-        if (hardToggle != null)
-            hardToggle.onValueChanged.AddListener(OnHardToggle);
+        {
+            RectTransform rect = gameModeDropdown.GetComponent<RectTransform>();
+            if (rect != null) rect.sizeDelta = new Vector2(200, 50);
+        }
 
         if (volumeSlider != null)
         {
-            // Remove existing listeners to avoid duplicates
-            volumeSlider.onValueChanged.RemoveAllListeners();
-            volumeSlider.onValueChanged.AddListener(OnVolumeChanged);
+            RectTransform rect = volumeSlider.GetComponent<RectTransform>();
+            if (rect != null) rect.sizeDelta = new Vector2(300, 30);
         }
+
+        // Add mobile instructions
+        GameObject instructions = GameObject.Find("InstructionText");
+        if (instructions != null)
+        {
+            TMP_Text text = instructions.GetComponent<TMP_Text>();
+            if (text != null) text.text = "Mobile Version - Tap to play";
+        }
+#elif UNITY_STANDALONE
+            // Desktop version
+            GameObject instructions = GameObject.Find("InstructionText");
+            if (instructions != null)
+            {
+                TMP_Text text = instructions.GetComponent<TMP_Text>();
+                if (text != null) text.text = "Desktop Version - Click to play";
+            }
+#endif
     }
 
     void FindAudioManager()
     {
-        // Try to find AudioManager in the scene
         audioManager = Object.FindFirstObjectByType<AudioManager>();
-
         if (audioManager == null)
         {
-            Debug.LogWarning("⚠️ AudioManager not found in scene! Creating temporary one...");
-            // Create a GameObject with AudioManager if it doesn't exist
+            Debug.LogWarning("AudioManager not found! Creating one...");
             GameObject audioManagerGO = new GameObject("AudioManager");
             audioManager = audioManagerGO.AddComponent<AudioManager>();
         }
@@ -58,14 +86,12 @@ public class SettingsMenu : MonoBehaviour
 
     void LoadSettingsToUI()
     {
-        // Load game mode
         if (gameModeDropdown != null)
         {
             int savedMode = PlayerPrefs.GetInt("GameMode", 0);
             gameModeDropdown.value = savedMode;
         }
 
-        // Load difficulty
         if (easyToggle != null && hardToggle != null)
         {
             int savedDifficulty = PlayerPrefs.GetInt("Difficulty", 0);
@@ -73,22 +99,27 @@ public class SettingsMenu : MonoBehaviour
             hardToggle.isOn = (savedDifficulty == 1);
         }
 
-        // Load volume
         if (volumeSlider != null)
         {
             float savedVolume = PlayerPrefs.GetFloat("musicVolume", 1f);
             volumeSlider.value = savedVolume;
+            if (audioManager != null) audioManager.SetVolume(savedVolume);
+            else AudioListener.volume = savedVolume;
+        }
+    }
 
-            // Apply volume immediately
-            if (audioManager != null)
-            {
-                audioManager.SetVolume(savedVolume);
-            }
-            else
-            {
-                // Fallback: set volume directly
-                AudioListener.volume = savedVolume;
-            }
+    void AddListeners()
+    {
+        if (gameModeDropdown != null)
+            gameModeDropdown.onValueChanged.AddListener(OnGameModeChanged);
+        if (easyToggle != null)
+            easyToggle.onValueChanged.AddListener(OnEasyToggle);
+        if (hardToggle != null)
+            hardToggle.onValueChanged.AddListener(OnHardToggle);
+        if (volumeSlider != null)
+        {
+            volumeSlider.onValueChanged.RemoveAllListeners();
+            volumeSlider.onValueChanged.AddListener(OnVolumeChanged);
         }
     }
 
@@ -96,8 +127,6 @@ public class SettingsMenu : MonoBehaviour
     {
         if (GameModeManager.instance != null)
             GameModeManager.instance.SetGameMode(value);
-        else
-            Debug.LogWarning("⚠️ GameModeManager.instance is null!");
     }
 
     void OnEasyToggle(bool isOn)
@@ -114,43 +143,24 @@ public class SettingsMenu : MonoBehaviour
 
     void OnVolumeChanged(float value)
     {
-        Debug.Log("🔊 Volume slider changed to: " + value);
-
-        // Try to use AudioManager
-        if (audioManager == null)
-        {
-            FindAudioManager();
-        }
-
-        if (audioManager != null)
-        {
-            audioManager.SetVolume(value);
-        }
+        if (audioManager == null) FindAudioManager();
+        if (audioManager != null) audioManager.SetVolume(value);
         else
         {
-            // Fallback: set volume directly if AudioManager doesn't exist
-            Debug.LogWarning("⚠️ AudioManager not found, setting volume directly");
             AudioListener.volume = value;
             PlayerPrefs.SetFloat("musicVolume", value);
             PlayerPrefs.Save();
         }
     }
 
-    // Call this when returning to menu to refresh settings
     void OnEnable()
     {
-        Debug.Log("🔄 Settings Menu Enabled - Refreshing UI");
         LoadSettingsToUI();
-
-        // Refresh GameModeManager settings
         if (GameModeManager.instance != null)
             GameModeManager.instance.RefreshSettings();
-
-        // Re-find AudioManager
         FindAudioManager();
     }
 
-    // Clean up listeners when disabled
     void OnDisable()
     {
         if (volumeSlider != null)
