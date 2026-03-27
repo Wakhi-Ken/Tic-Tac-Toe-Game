@@ -45,9 +45,9 @@ The AI uses a simple 3-step decision process:
 ## 🚀 How to Run the Game
 
 ### Option 1: Play the Builds
-- **PC**: Download and run the .exe file
-- **Android**: Install the APK on your device
-- **WebGL**: Play in browser at [Unity Play Link]
+- **PC**: Download and run the .exe file [https://www.mediafire.com/file/6rlnwbilchq78il/TicTacToe.zip/file]
+- **Android**: Install the APK on your device [https://www.mediafire.com/file/wys9kobxyh5i1sk/Tic_Tac_Toe.apk/file]
+- **WebGL**: Play in browser at [https://play.unity.com/en/games/27669612-67e4-4673-8f82-b7dfc05afccb/tic-tac-toe]
 
 ### Option 2: Run in Unity Editor
 
