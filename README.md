@@ -2,36 +2,44 @@
 ![alt text](image.png)
 A cross-platform Tic-Tac-Toe game built with Unity. Play against a friend or challenge the AI!
 
-## 🎮 Game Features
+## Game Features
 - Player vs Player mode
 - Player vs AI mode (Easy & Hard difficulty)
 - Sound control with volume slider
 - Settings persist between sessions
-- Works on PC, Android, iOS, and WebGL
+- Works on PC, Android, and WebGL
 
-## 📁 Class Structure
-Scripts/
-├── AI/
-│ ├── IAIStrategy.cs - Interface for AI algorithms
-│ └── RuleBasedAIStrategy.cs - AI logic (Win → Block → Random)
-│
-├── GameLogic/
-│ ├── BoardState.cs - Manages game board (no Unity dependencies)
-│ ├── WinChecker.cs - Detects wins and draws
-│ └── GameEvents.cs - Event system for UI updates
-│
-├── UI/
-│ ├── GameManager.cs - Main game controller
-│ ├── SettingsMenu.cs - Settings panel logic
-│ ├── MainMenu.cs - Main menu navigation
-│ └── ResetAllSettings.cs - Factory reset functionality
-│
-└── Audio/
-└── AudioManager.cs - Volume control (persistent)
+## Class Structure
+<img width="1451" height="862" alt="image" src="https://github.com/user-attachments/assets/f7509f54-0792-4959-8fe4-25764ecd4f2a" />
+
+GameLogic (Pure C# - No Unity)
+Class	Purpose
+BoardState	Manages game board array, checks empty cells, resets board
+WinChecker	Detects winner (3 in a row), finds winning pattern, checks draw
+GameEvents	Observer pattern - notifies UI when game state changes
+AI (Strategy Pattern)
+Class	Purpose
+IAIStrategy	Interface for AI algorithms (allows swapping)
+RuleBasedAIStrategy	AI logic: ① Win ② Block ③ Random
+
+ UI (Unity MonoBehaviour)
+Class	Purpose
+GameManager	Main controller - handles turns, UI updates, mobile orientation
+SettingsMenu	Settings panel - game mode, difficulty, volume
+MainMenu	Navigation - Play, Settings, Quit buttons
+ResetAllSettings	Factory reset - clears all saved settings
+
+ Audio
+Class	Purpose
+AudioManager	Persistent volume control across scenes
+
+Tests
+Class	Purpose
+GameLogicTests	NUnit tests for win detection, AI logic, board state
 
 text
 
-## 🤖 How AI Works
+## How AI Works
 
 The AI uses a simple 3-step decision process:
 
@@ -42,7 +50,7 @@ The AI uses a simple 3-step decision process:
 **Easy Mode**: Only uses step 3 (random moves)
 **Hard Mode**: Uses all 3 steps (smart AI)
 
-## 🚀 How to Run the Game
+## How to Run the Game
 
 ### Option 1: Play the Builds
 - **PC**: Download and run the .exe file [https://www.mediafire.com/file/6rlnwbilchq78il/TicTacToe.zip/file]
@@ -61,7 +69,7 @@ The AI uses a simple 3-step decision process:
 2. Select target platform (PC, Android, iOS, WebGL)
 3. Click Build
 
-## 🎮 How to Play
+##  How to Play
 
 1. **Main Menu**: Choose Play to start or Settings to adjust options
 2. **Game Modes**:
@@ -72,20 +80,19 @@ The AI uses a simple 3-step decision process:
    - First to get 3 in a row wins!
    - Press Reset to start over
 
-## 📱 Platform Notes
+##  Platform Notes
 
 | Platform | Orientation | Input |
 |----------|------------|-------|
 | PC | Any | Mouse Click |
 | Android | Landscape | Touch |
-| iOS | Landscape | Touch |
 | WebGL | Any | Mouse Click |
 
-## 🛠️ Requirements
+##  Requirements
 
 - Unity 2020.3 or newer
 - TextMeshPro (included with Unity)
 
 ---
 
-**Made with Unity** 🎮
+**Made with Unity** 
