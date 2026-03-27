@@ -11,12 +11,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TicTacToe.unity
     guid: ecb270f9bae2afd4bae163e71ec7d91b
-  - enabled: 1
-    path: Assets/Scenes/Lose Menu.unity
-    guid: 5e850fb0dac8c0944baa0d062cd37d96
-  - enabled: 1
-    path: Assets/Scenes/Win Menu.unity
-    guid: da4c5feee6ab1db4d8b4f000c144e543
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
