@@ -11,7 +11,7 @@ A cross-platform Tic-Tac-Toe game built with Unity. Play against a friend or cha
 
 ## Class Structure
 <img width="1451" height="862" alt="image" src="https://github.com/user-attachments/assets/f7509f54-0792-4959-8fe4-25764ecd4f2a" />
-
+##
 GameLogic (Pure C# - No Unity)
 Class	Purpose
 BoardState	Manages game board array, checks empty cells, resets board
@@ -21,18 +21,18 @@ AI (Strategy Pattern)
 Class	Purpose
 IAIStrategy	Interface for AI algorithms (allows swapping)
 RuleBasedAIStrategy	AI logic: ① Win ② Block ③ Random
-
+##
  UI (Unity MonoBehaviour)
 Class	Purpose
 GameManager	Main controller - handles turns, UI updates, mobile orientation
 SettingsMenu	Settings panel - game mode, difficulty, volume
 MainMenu	Navigation - Play, Settings, Quit buttons
 ResetAllSettings	Factory reset - clears all saved settings
-
+##
  Audio
 Class	Purpose
 AudioManager	Persistent volume control across scenes
-
+##
 Tests
 Class	Purpose
 GameLogicTests	NUnit tests for win detection, AI logic, board state
