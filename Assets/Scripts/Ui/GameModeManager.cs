@@ -118,7 +118,6 @@ public class GameModeManager : MonoBehaviour
     // Notify any UI elements that settings changed
     void NotifySettingsChanged()
     {
-        // You can add events here if needed
         // For now, just update the game if it exists
         ApplyToGame();
     }
